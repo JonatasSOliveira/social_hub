@@ -19,5 +19,5 @@ class FacebookHomePagePaths:
         '/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[1]/div/div[2]/div/div/div/form/div/div[1]/div/div/div'
         + '/div[2]/div[1]/div[1]/div[1]/div/div/div[1]'
     )
-    FILE_INPUT_XPATH = '//input[@type="file"]'
+    FILE_INPUT_XPATH = '//div/input[@type="file"]'
     POST_BTN_XPATH = '//div[@aria-label="Publicar"]'
