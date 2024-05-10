@@ -2,6 +2,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+import os
+import pandas as pd
 from time import sleep
 
 from selenium import webdriver
@@ -11,31 +13,27 @@ from src.controllers.whatsapp_controller import WhatsappController
 from src.controllers.telegram_controller import TelegramController
 from src.controllers.facebook_controller import FacebookController
 
-message = 'Hello from Python'
-
 
 def _get_web_driver() -> WebDriver:
     options = webdriver.ChromeOptions()
     options.add_argument("--disable-notifications")
-    # dir_path = os.getcwd()
-    # profile = os.path.join(dir_path, "profile", "wpp")
-    # options.add_argument(r"user-data-dir={}".format(profile))
+    dir_path = os.getcwd()
+    profile = os.path.join(dir_path, "profile", "wpp")
+    options.add_argument(r"user-data-dir={}".format(profile))
     return webdriver.Chrome(options)
 
 
 def main() -> None:
     web_driver = _get_web_driver()
+    csv_data = pd.read_csv('data.csv')
 
     whatsapp_controller = WhatsappController(web_driver)
-    telegram_controller = TelegramController(web_driver)
-    facebook_controller = FacebookController(web_driver)
 
-    facebook_controller.open_website()
-    facebook_controller.auth()
-    facebook_controller.public_image_post('pictures\game\img_01.png', message)
-    sleep(10)
-
-    pass
+    whatsapp_controller.open_website()
+    whatsapp_controller.auth()
+    for index, row in csv_data.iterrows():
+        whatsapp_controller.send_message_to_group(row['whatsapp_group'], row['link'], row['image_path'])
+        web_driver.save_screenshot('screenshots/{}.png'.format(index))
 
 
 main()

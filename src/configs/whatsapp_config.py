@@ -1,6 +1,11 @@
-search_box_xpath = '//div[@contenteditable="true"][@data-tab="3"]' # <- "caminho" para a barra de pesquisa
-msg_input_xpath='//div[@contenteditable="true"][@data-tab="10"]' # <- "caminho" para o campo de mensagen
-send_btn_xpath='//*[@id="main"]/footer/div[1]/div/span[2]/div/div[2]/div[2]/button/span' # <- "caminho" para o botão de enviar
+class WhatsappHomeConfig:
+    SEARCH_BOX_XPATH = '//div[@contenteditable="true"][@data-tab="3"]'
+    MSG_INPUT_XPATH = '//div[@contenteditable="true"][@data-tab="10"]'
+    SEND_MSG_BTN_XPATH = '//button[@aria-label="Enviar"]'
+    ATTACH_BTN_XPATH = '//div[@aria-label="Anexar"]'
+    IMG_VIDEO_INPUT_XPATH = '//input[@type="file"][@accept="image/*,video/mp4,video/3gpp,video/quicktime"]'
+    SEND_IMG_VIDEO_BTN_XPATH = '//div[@aria-label="Enviar"]'
 
-def get_group_xpath(group_title: str) -> str:
-    return f'//span[@title="{group_title}"]'
+    @staticmethod
+    def get_group_xpath(group_title: str) -> str:
+        return f'//span[@title="{group_title}"]'

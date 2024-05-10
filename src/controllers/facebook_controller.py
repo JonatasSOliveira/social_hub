@@ -4,10 +4,9 @@ from time import sleep
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.keys import Keys
 
 from src.configs.facebook_config import login, password, FacebookLoginPagePaths, FacebookHomePagePaths
+from src.utils.file_utils import FileUtils
 
 
 class FacebookController:
@@ -44,8 +43,7 @@ class FacebookController:
         sleep(2)
 
     def public_image_post(self, image_path: str, message: str) -> None:
-        project_directory = os.path.dirname(os.path.abspath(sys.argv[0]))
-        absolute_image_path = os.path.join(project_directory, image_path)
+        absolute_image_path = FileUtils.absolute_file_path(image_path)
 
         img_post_button = self._web_driver.find_element(By.XPATH, FacebookHomePagePaths.IMG_POST_INPUT_BUTTON_XPATH)
         img_post_button.click()
@@ -55,6 +53,6 @@ class FacebookController:
         post_input.send_keys(message)
         sleep(2)
 
-        input_file = self._web_driver.find_element(By.XPATH, FacebookHomePagePaths.FILE_INPUT_XPATH)
-        input_file.send_keys(absolute_image_path)
+        file_input = self._web_driver.find_element(By.XPATH, FacebookHomePagePaths.FILE_INPUT_XPATH)
+        file_input.send_keys(absolute_image_path)
         sleep(2)
