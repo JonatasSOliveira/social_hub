@@ -12,20 +12,30 @@ from src.utils.file_utils import FileUtils
 class FacebookController:
     _WEBSITE_URL = 'https://www.facebook.com/'
     _web_driver: WebDriver = None
+    _input_login_exists = False
 
     def __init__(self, web_driver: WebDriver) -> None:
         self._web_driver = web_driver
 
+    def _verify_input_login_exists(self) -> None:
+        return len(self._web_driver.find_elements(By.XPATH, FacebookLoginPagePaths.LOGIN_INPUT_XPATH)) > 0
+
     def open_website(self) -> None:
         self._web_driver.get(self._WEBSITE_URL)
-        while (
-            len(self._web_driver.find_elements(By.XPATH, FacebookLoginPagePaths.LOGIN_INPUT_XPATH)) < 1
-            and len(self._web_driver.find_elements(By.XPATH, FacebookHomePagePaths.ADD_PICTURE_BUTTON_XPATH)) < 1
+
+        self._input_login_exists = self._verify_input_login_exists()
+        while not (
+            self._input_login_exists
+            or len(self._web_driver.find_elements(By.XPATH, FacebookHomePagePaths.IMG_POST_INPUT_BUTTON_XPATH)) > 0,
         ):
+            self._input_login_exists = self._verify_input_login_exists()
             sleep(1)
         sleep(2)
 
     def auth(self) -> None:
+        if not self._input_login_exists:
+            return
+
         login_input = self._web_driver.find_element(By.XPATH, FacebookLoginPagePaths.LOGIN_INPUT_XPATH)
         password_input = self._web_driver.find_element(By.XPATH, FacebookLoginPagePaths.PASSWORD_INPUT_XPATH)
         if not login_input or not password_input:
@@ -56,3 +66,7 @@ class FacebookController:
         file_input = self._web_driver.find_element(By.XPATH, FacebookHomePagePaths.FILE_INPUT_XPATH)
         file_input.send_keys(absolute_image_path)
         sleep(2)
+
+        post_btn = self._web_driver.find_element(By.XPATH, FacebookHomePagePaths.POST_BTN_XPATH)
+        post_btn.click()
+        sleep(6)
