@@ -28,12 +28,21 @@ def main() -> None:
     csv_data = pd.read_csv('data.csv')
 
     whatsapp_controller = WhatsappController(web_driver)
+    facebook_controller = FacebookController(web_driver)
 
     whatsapp_controller.open_website()
     whatsapp_controller.auth()
+
     for index, row in csv_data.iterrows():
         whatsapp_controller.send_message_to_group(row['whatsapp_group'], row['link'], row['image_path'])
-        web_driver.save_screenshot('screenshots/{}.png'.format(index))
+        web_driver.save_screenshot('screenshots/whatsapp/{}.png'.format(index))
+
+    facebook_controller.open_website()
+    facebook_controller.auth()
+
+    for index, row in csv_data.iterrows():
+        facebook_controller.public_image_post(row['image_path'], row['link'])
+        web_driver.save_screenshot('screenshots/facebook/{}.png'.format(index))
 
 
 main()
